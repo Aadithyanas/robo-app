@@ -6,10 +6,7 @@ Run this on your phone using Termux or similar Python environment
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
-import requests
 import time
-import threading
-import queue
 
 class BridgeHandler(BaseHTTPRequestHandler):
     def do_POST(self):
