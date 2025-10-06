@@ -1,0 +1,22 @@
+name: esp32_gemini_bridge
+description: A Flutter app that bridges ESP32 device and Gemini API via Bluetooth
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_blue_plus: ^1.32.7   # Real Bluetooth SPP communication
+  http: ^1.1.0                 # API calls to Gemini and HTTP bridge
+  provider: ^6.0.5             # State management
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

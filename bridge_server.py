@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""
+Simple HTTP server that bridges Flutter app and ESP32 via Serial Terminal
+Run this on your phone using Termux or similar Python environment
+"""
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+import requests
+import time
+import threading
+import queue
+
+class BridgeHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        if self.path == '/send_command':
+            # Receive command from Flutter app
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            data = json.loads(post_data.decode('utf-8'))
+            
+            command = data.get('command', '')
+            print(f"Received command: {command}")
+            
+            # Here you would send to Serial Terminal app
+            # For now, we'll just echo back
+            response = {
+                'status': 'success',
+                'message': f'Command "{command}" received',
+                'timestamp': time.time()
+            }
+            
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
+            
+        elif self.path == '/get_status':
+            # Return ESP32 status
+            response = {
+                'status': 'connected',
+                'message': 'ESP32 is ready',
+                'timestamp': time.time()
+            }
+            
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
+    
+    def do_OPTIONS(self):
+        # Handle CORS preflight requests
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
+
+def run_server(port=8080):
+    server_address = ('', port)
+    httpd = HTTPServer(server_address, BridgeHandler)
+    print(f"Bridge server running on port {port}")
+    print("Connect your Flutter app to: http://localhost:{port}")
+    httpd.serve_forever()
+
+if __name__ == '__main__':
+    run_server()
