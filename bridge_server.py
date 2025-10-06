@@ -9,6 +9,24 @@ import json
 import time
 
 class BridgeHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/get_status':
+            # Return ESP32 status
+            response = {
+                'status': 'connected',
+                'message': 'ESP32 Bridge Ready',
+                'timestamp': time.time()
+            }
+            
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode())
+        else:
+            self.send_response(404)
+            self.end_headers()
+    
     def do_POST(self):
         if self.path == '/send_command':
             # Receive command from Flutter app
@@ -33,19 +51,9 @@ class BridgeHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(response).encode())
             
-        elif self.path == '/get_status':
-            # Return ESP32 status
-            response = {
-                'status': 'connected',
-                'message': 'ESP32 is ready',
-                'timestamp': time.time()
-            }
-            
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', '*')
+        else:
+            self.send_response(404)
             self.end_headers()
-            self.wfile.write(json.dumps(response).encode())
     
     def do_OPTIONS(self):
         # Handle CORS preflight requests

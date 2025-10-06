@@ -33,8 +33,6 @@ class BridgeHomePage extends StatefulWidget {
 class _BridgeHomePageState extends State<BridgeHomePage> {
   final TextEditingController _apiKeyController = TextEditingController();
   final TextEditingController _testPromptController = TextEditingController();
-  List<dynamic> _availableDevices = [];
-  bool _isScanning = false;
 
   @override
   void initState() {
@@ -244,20 +242,11 @@ class _BridgeHomePageState extends State<BridgeHomePage> {
                 ),
               ],
             ),
-            if (_availableDevices.isNotEmpty) ...[
-              SizedBox(height: 10),
-              Text('Available ESP32 Devices:', style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 5),
-              ...(_availableDevices.map((device) => ListTile(
-                leading: Icon(Icons.bluetooth),
-                title: Text(device.platformName.isNotEmpty ? device.platformName : 'Unknown Device'),
-                subtitle: Text(device.remoteId.toString()),
-                trailing: ElevatedButton(
-                  onPressed: () => _connectToDevice(bridge, device),
-                  child: Text('Connect'),
-                ),
-              )).toList()),
-            ],
+            SizedBox(height: 10),
+            Text(
+              'HTTP Bridge Mode: Connect to ESP32 via Serial Terminal',
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
           ],
         ),
       ),
