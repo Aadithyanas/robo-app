@@ -10,7 +10,7 @@ class GeminiService {
 
   // Gemini API configuration
   static const String _baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
-  static const String _model = 'gemini-2.5-flash';
+  static const String _model = 'gemini-2.0-flash';
   String? _apiKey;
 
   /// Set the API key for Gemini

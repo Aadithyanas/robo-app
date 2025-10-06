@@ -143,7 +143,18 @@ class HttpBridgeController extends ChangeNotifier {
       _updateStatus('Testing Gemini API...');
       String response = await _geminiService.generateContent(testPrompt);
       _lastGeminiResponse = response;
-      _updateStatus('Gemini test successful');
+      
+      // Automatically send Gemini response to ESP32
+      if (isConnected) {
+        bool sent = await _httpBridgeService.sendTextMessage(response);
+        if (sent) {
+          _updateStatus('Gemini response sent to ESP32: $response');
+        } else {
+          _updateStatus('Gemini test successful, but failed to send to ESP32');
+        }
+      } else {
+        _updateStatus('Gemini test successful (ESP32 not connected)');
+      }
     } catch (e) {
       _lastGeminiResponse = 'Test failed: $e';
       _updateStatus('Gemini test failed: $e');

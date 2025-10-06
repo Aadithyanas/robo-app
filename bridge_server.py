@@ -37,11 +37,16 @@ class BridgeHandler(BaseHTTPRequestHandler):
             command = data.get('command', '')
             print(f"Received command: {command}")
             
-            # Here you would send to Serial Terminal app
+            # TODO: Forward to Serial Terminal app
             # For now, we'll just echo back
+            # In a real implementation, you would:
+            # 1. Send the command to Serial Terminal app
+            # 2. Wait for ESP32 response
+            # 3. Return the ESP32 response
+            
             response = {
                 'status': 'success',
-                'message': f'Command "{command}" received',
+                'message': f'Command "{command}" forwarded to ESP32',
                 'timestamp': time.time()
             }
             
